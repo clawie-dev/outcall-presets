@@ -1,6 +1,8 @@
 # Outcall Presets for Clawie
 
-Curated [Outcall](https://github.com/clawie-dev/outcall) rule packs for common Clawie agent profiles. Drop-in egress allow-lists so operators don't have to write them from scratch.
+Curated [Outcall](https://github.com/Outcall-dev/root) rule packs for common Clawie agent profiles. Drop-in egress allow-lists so operators don't have to write them from scratch.
+
+> Outcall is owned by [`Outcall-dev`](https://github.com/Outcall-dev/root) — an independent host-level firewall project that Clawie may optionally consume. The presets here are Clawie-shaped bundles built on top of Outcall's rule format.
 
 ## Profiles (planned)
 
