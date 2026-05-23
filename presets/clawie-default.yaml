@@ -1,0 +1,46 @@
+# Outcall preset: clawie-default
+#
+# Default rule pack for Clawie agents (chat + echo intents). Drop this into
+# `/etc/outcall/rules.d/` on the host, then run `outcall rules reload`.
+#
+# Coverage
+#   - Anthropic Messages API (chat intent, provider=anthropic)
+#   - OpenAI Chat Completions API (chat intent, provider=openai)
+#
+# Identity match
+#   Clawie's OutcallEgressProvider names spawned containers
+#   `clawie-<intent>-<random>`. Outcall's `agent.name` rule binding
+#   strips the trailing `-<N>` replica suffix, so the value the rule
+#   engine sees is `clawie-<intent>`. The rules below match exactly
+#   those identities.
+#
+# Defense-in-depth
+#   Default action when no rule matches is `block`. These allows are
+#   additive only; no rule below can grant access an intent shouldn't
+#   already have. To remove Clawie's egress entirely, delete this file
+#   and reload.
+#
+# Limitations (inherited from Outcall)
+#   - No HTTPS method/path filtering. The rule scope is `http.host`
+#     (SNI). If you want method/path on these endpoints, you'd need
+#     TLS interception which Outcall intentionally does not do.
+#   - These rules do not inject credentials. The agent must carry its
+#     own `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` (Clawie's credential
+#     broker handles this).
+
+version: "1"
+
+rules:
+  - id: clawie-chat-anthropic
+    description: "Clawie chat intent: allow Anthropic Messages API"
+    condition: 'agent.name == "clawie-chat" && (dns.query == "api.anthropic.com" || http.host == "api.anthropic.com")'
+    action: allow
+    egress:
+      mode: proxy
+
+  - id: clawie-chat-openai
+    description: "Clawie chat intent: allow OpenAI Chat Completions API"
+    condition: 'agent.name == "clawie-chat" && (dns.query == "api.openai.com" || http.host == "api.openai.com")'
+    action: allow
+    egress:
+      mode: proxy
