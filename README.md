@@ -35,13 +35,19 @@ These are the profiles we want to ship next; PRs welcome.
 sudo cp presets/clawie-default.yaml /etc/outcall/rules.d/
 sudo outcall rules reload
 
-# Via Clawie (per-team, generated from team agents)
+# Via Clawie (per-team)
 node ace outcall:sync --team <team-slug>
+node ace outcall:sync --team <team-slug> --hosts api.anthropic.com,api.openai.com,api.github.com
 ```
 
-The `node ace outcall:sync` command in Clawie generates a team-scoped rule
-pack from each agent's TOOLS.yaml and pushes it to the daemon — preferred
-over manual install when you have multiple teams.
+The `node ace outcall:sync` command in Clawie writes
+`/etc/outcall/rules.d/clawie-team-<slug>.yaml` for the named team and
+asks the daemon to reload. By default the team's chat intent is allowed
+to reach `api.anthropic.com` and `api.openai.com`; pass `--hosts` with a
+comma-separated list to override. The team slug must already exist
+(`teams:create` first). Preferred over manual install when you have
+multiple teams — each team gets its own rule file, scoped by
+`agent.name == "clawie-<team-slug>-chat"`.
 
 ## Layout
 
