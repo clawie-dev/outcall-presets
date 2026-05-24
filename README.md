@@ -1,10 +1,23 @@
 # Outcall Presets for Clawie
 
-Curated [Outcall](https://github.com/Outcall-dev/root) rule packs for common Clawie agent profiles. Drop-in egress allow-lists so operators don't have to write them from scratch.
+Curated [Outcall](https://github.com/outcall-dev/root) rule packs for common
+Clawie agent profiles. Drop-in egress allow-lists so operators don't have to
+write them from scratch.
 
-> Outcall is owned by [`Outcall-dev`](https://github.com/Outcall-dev/root) — an independent host-level firewall project that Clawie may optionally consume. The presets here are Clawie-shaped bundles built on top of Outcall's rule format.
+> Outcall is owned by [`outcall-dev`](https://github.com/outcall-dev/root) — an
+> independent host-level firewall project that Clawie may optionally consume.
+> The presets here are Clawie-shaped bundles built on top of Outcall's rule
+> format.
 
-## Profiles (planned)
+## Shipped presets
+
+| Preset | Allows | Intent identity |
+|---|---|---|
+| [`clawie-default`](presets/clawie-default.yaml) | Anthropic Messages API + OpenAI Chat Completions API | `agent.name == "clawie-chat"` |
+
+## Roadmap
+
+These are the profiles we want to ship next; PRs welcome.
 
 | Profile | Allows |
 |---|---|
@@ -18,28 +31,35 @@ Curated [Outcall](https://github.com/Outcall-dev/root) rule packs for common Cla
 ## Install
 
 ```bash
-clawie outcall preset install coder --for-agent default-agency/coder
+# Manual: drop into the Outcall rules directory and reload
+sudo cp presets/clawie-default.yaml /etc/outcall/rules.d/
+sudo outcall rules reload
+
+# Via Clawie (per-team, generated from team agents)
+node ace outcall:sync --team <team-slug>
 ```
+
+The `node ace outcall:sync` command in Clawie generates a team-scoped rule
+pack from each agent's TOOLS.yaml and pushes it to the daemon — preferred
+over manual install when you have multiple teams.
 
 ## Layout
 
 ```
 outcall-presets/
 ├── presets/
-│   ├── coder.yaml
-│   ├── devops.yaml
-│   ├── web-research.yaml
-│   ├── marketer.yaml
-│   ├── security-audit.yaml
-│   └── local-only.yaml
-└── tests/
+│   └── clawie-default.yaml    ← currently the only published preset
+└── README.md
 ```
 
-Each preset is a versioned, signed Outcall ruleset reviewable as a PR.
+Each preset is a versioned Outcall ruleset reviewable as a PR.
 
 ## Status
 
-Bootstrap pending. See [`clawie-dev/specs/speckit/002-container-runtime-outcall`](https://github.com/clawie-dev/specs/tree/main/speckit/002-container-runtime-outcall).
+Bootstrapped. `clawie-default` is the production preset used by Clawie's
+`chat` intent. The other six profiles are planned. See
+[spec 002](https://github.com/clawie-dev/specs/tree/main/speckit/002-container-runtime-outcall)
+for the design contract these presets implement.
 
 ## License
 
