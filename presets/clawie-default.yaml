@@ -1,7 +1,10 @@
 # Outcall preset: clawie-default
 #
-# Default rule pack for Clawie agents (chat + echo intents). Drop this into
+# Default rule pack for Clawie's chat intent. Drop this into
 # `/etc/outcall/rules.d/` on the host, then run `outcall rules reload`.
+#
+# Compute-only intents (e.g. echo) make no network calls, so under
+# Outcall's default-deny they need no allow rule and none is shipped here.
 #
 # Coverage
 #   - Anthropic Messages API (chat intent, provider=anthropic)
